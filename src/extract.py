@@ -4,6 +4,8 @@ import os
 import time
 from google.oauth2 import service_account
 from google.cloud import bigquery
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 
 # --- CONFIGURATION ---
@@ -20,11 +22,22 @@ def fetch_f1_data(endpoint):
     offset = 0
     total = 1 # Temporary placeholder to start the loop
     
+    # Setup retry strategy
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504]
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    
     print(f"--- Starting Paginated Fetch for {endpoint} ---")
     
     while offset < total: 
         url = f"{BASE_URL}/{endpoint}.json?limit={limit}&offset={offset}"
-        response = requests.get(url)
+        response = session.get(url)
         response.raise_for_status()
         data = response.json()
 
@@ -50,9 +63,6 @@ def fetch_f1_data(endpoint):
         
         # 2. Update the offset to get the next page on the next loop
         offset += limit
-        
-        # 3. Optional: small pause so we don't spam the API too fast
-        time.sleep(0.1)
 
     # 4. Once the loop is done, convert the list of JSON objects into a flat Pandas Table
     df = pd.json_normalize(all_results)
@@ -84,7 +94,7 @@ def sanitize_column_names(df):
 
 if __name__ == "__main__":
     # The list of tables we decided to pull for the MVP
-    ENDPOINTS = ['drivers', 'circuits', 'constructors']
+    ENDPOINTS = ['drivers', 'circuits', 'constructors', 'results', 'seasons', 'status']
     
     for ep in ENDPOINTS:
         try:

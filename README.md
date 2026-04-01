@@ -25,8 +25,8 @@ The project utilizes a Modern Data Stack (MDS) approach to handle batch data ing
 
 ### Repository Setup
 1. Clone the repository:
-   git clone https://github.com/your-username/f1-enterprise-elt.git
-   cd f1-enterprise-elt
+   git clone https://github.com/liamcooneyh/f1-elt.git
+   cd f1-elt
 
 2. Environment Configuration:
    * Create a Service Account in GCP with the BigQuery Admin role.

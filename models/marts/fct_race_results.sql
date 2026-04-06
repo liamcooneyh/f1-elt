@@ -29,6 +29,7 @@ final_join as (
         -- Driver Info
         d.first_name,
         d.last_name,
+        concat(d.first_name, ' ', d.last_name) as driver_name,
         d.driver_code,
         d.nationality as driver_nationality,
         

@@ -1,0 +1,15 @@
+# This name MUST match the 'profile:' name found inside your dbt_project.yml
+f1_elt: 
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: f1-data-lakehouse
+      dataset: dbt_f1
+      threads: 4
+      # This points to the JSON key you're already using for your Python script
+      keyfile: ../gcp_credentials.json 
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1

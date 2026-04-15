@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: stg_drivers
+    columns:
+      - name: driver_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_results
+    columns:
+      - name: driver_id
+        data_tests:
+          - relationships:
+              to: ref('stg_drivers')
+              field: driver_id
+      - name: constructor_id
+        data_tests:
+          - relationships:
+              to: ref('stg_constructors')
+              field: constructor_id
+
+  - name: stg_constructors
+    columns:
+      - name: constructor_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_circuits
+    columns:
+      - name: circuit_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_seasons
+    columns:
+      - name: season_year # Assuming you renamed 'season' to 'season_year'
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_status
+    columns:
+      - name: status_id
+        data_tests:
+          - unique
+          - not_null

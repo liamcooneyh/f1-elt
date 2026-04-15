@@ -1,0 +1,13 @@
+version: 2
+
+sources: 
+  - name: raw_f1_data
+    database: f1-data-lakehouse
+    schema: raw_f1_data
+    tables:
+      - name: raw_circuits
+      - name: raw_constructors
+      - name: raw_drivers
+      - name: raw_results
+      - name: raw_seasons
+      - name: raw_status

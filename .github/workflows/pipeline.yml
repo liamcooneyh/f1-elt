@@ -22,6 +22,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run ELT Script
+        working-directory: ./src  # Adjust if your script is in a different directory
         env:
           # This maps your GitHub Secret to an environment variable
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}

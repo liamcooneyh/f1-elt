@@ -2,8 +2,8 @@ name: F1 Data Pipeline
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight UTC
-  workflow_dispatch:      # Allows you to click a button to run it manually
+    - cron: '0 0 * * *' 
+  workflow_dispatch:      
 
 jobs:
   run-pipeline:
@@ -21,9 +21,19 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run ELT Script
-        working-directory: ./src  # Adjust if your script is in a different directory
+      - name: Run ELT Script (Extract & Load)
+        working-directory: ./src
         env:
-          # This maps your GitHub Secret to an environment variable
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: python extract.py
+
+      - name: Run dbt (Transform & Test)
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }} 
+        run: |
+          echo "$GCP_SA_KEY" > gcp_credentials.json
+          
+          # Move into the dbt directory and run
+          cd dbt_f1
+          dbt run --profiles-dir .
+          dbt test --profiles-dir .

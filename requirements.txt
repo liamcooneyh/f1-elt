@@ -3,3 +3,4 @@ pandas
 pandas-gbq
 google-auth
 google-cloud-bigquery
+dbt-bigquery
